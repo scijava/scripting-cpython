@@ -138,8 +138,8 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 					</linker>
 					<libraries>
 						<library>
-							<type>executable</type>
-							<run>true</run>
+							<type>jni</type>
+							<narSystemPackage>org.scijava.plugins.scripting.cpython</narSystemPackage>
 						</library>
 					</libraries>
 				</configuration>

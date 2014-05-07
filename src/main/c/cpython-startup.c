@@ -28,13 +28,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-#include <python.h>
-#include <stdio.h>
 
-int main(int argc, char **argv)
+#include "org_scijava_plugins_scripting_cpython_CPythonStartup.h"
+#include <python.h>
+
+JNIEXPORT void JNICALL Java_org_scijava_plugins_scripting_cpython_CPythonStartup_initializePythonThread(JNIEnv *env, jclass clazz)
 {
 	Py_Initialize();
 	PyRun_SimpleString("print 'Hello, world!'");
 	Py_Finalize();
-	return 0;
 }
