@@ -36,9 +36,8 @@ import javax.script.ScriptEngine;
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-
-import imagej.script.AbstractScriptLanguage;
-import imagej.script.ScriptLanguage;
+import org.scijava.script.AbstractScriptLanguage;
+import org.scijava.script.ScriptLanguage;
 
 /**
  * @author Lee Kamentsky

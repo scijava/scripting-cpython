@@ -12,11 +12,8 @@
   <description>Scripting plugin for ImageJ</description>
   <dependencies>
   	<dependency>
-  		<groupId>net.imagej</groupId>
-  		<artifactId>ij-core</artifactId>
-  		<version>2.0.0-beta-7.8</version>
-  		<type>jar</type>
-  		<scope>compile</scope>
+  		<groupId>org.scijava</groupId>
+  		<artifactId>scijava-common</artifactId>
   	</dependency>
   </dependencies>
   <build>
