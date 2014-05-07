@@ -36,5 +36,10 @@ JNIEXPORT void JNICALL Java_org_scijava_plugins_scripting_cpython_CPythonStartup
 {
 	Py_Initialize();
 	PyRun_SimpleString("print 'Hello, world!'");
-	Py_Finalize();
+	/*
+	 * We cannot really call Py_Finalize(); here: multiple SciJava contexts
+	 * can have their individual CPythonScriptLanguage instances, so we
+	 * cannot call it after tearing down the context, either, so we have to
+	 * introduce a reference counter in the C library (TODO).
+	 */
 }
