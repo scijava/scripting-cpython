@@ -19,6 +19,8 @@
 
 	<properties>
 		<python.version>2.6</python.version>
+		<!-- surefire does not know about NAR... -->
+		<skipTests>true</skipTests>
 	</properties>
 
 	<licenses>
@@ -99,6 +101,7 @@
 	</dependencies>
 
 	<build>
+		<defaultGoal>integration-test</defaultGoal>
 		<plugins>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
