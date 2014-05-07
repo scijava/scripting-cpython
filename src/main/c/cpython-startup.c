@@ -34,12 +34,15 @@
 
 JNIEXPORT void JNICALL Java_org_scijava_plugins_scripting_cpython_CPythonStartup_initializePythonThread(JNIEnv *env, jclass clazz, jstring pythonCode)
 {
+	PyGILState_STATE state;
 	const char *python_code;
 
 	Py_Initialize();
+	state = PyGILState_Ensure();
 	python_code = (*env)->GetStringUTFChars(env, pythonCode, NULL);
 	PyRun_SimpleString(python_code);
         (*env)->ReleaseStringUTFChars(env, pythonCode, python_code);
+	PyGILState_Release(state);
 
 	/*
 	 * We cannot really call Py_Finalize(); here: multiple SciJava contexts
