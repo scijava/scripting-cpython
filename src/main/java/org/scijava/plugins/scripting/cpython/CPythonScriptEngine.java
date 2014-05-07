@@ -33,6 +33,7 @@ package org.scijava.plugins.scripting.cpython;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +104,17 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 		 * Sent via the responseQueue: an exception occurred during execution or evaluation
 		 * The payload contains a Java exception
 		 */
-		EXCEPTION
+		EXCEPTION,
+		/**
+		 * Sent via the requestQueue: close and destroy the Python side of the engine
+		 * There is no response.
+		 */
+		CLOSE_ENGINE,
+		/**
+		 * Sent when closing the service
+		 */
+		CLOSE_SERVICE
+		
 	};
 	public static class Message {
 		final public EngineCommands command;
@@ -117,6 +128,13 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 	public CPythonScriptEngine() throws InterruptedException {
 		engineRequestQueue.put(new Message(EngineCommands.NEW_ENGINE, Arrays.asList((Object)requestQueue, (Object)responseQueue)));
 		engineResponseQueue.take();
+	}
+	/**
+	 * Tell the Python side that the service is finished
+	 * @throws InterruptedException
+	 */
+	static void closeService() throws InterruptedException {
+		engineRequestQueue.put(new Message(EngineCommands.CLOSE_SERVICE, Collections.emptyList()));
 	}
 	@Override
 	public Object eval(String script) throws ScriptException {
@@ -164,6 +182,15 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 			}
 		}
 		return eval(buf.toString());
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		requestQueue.put(new Message(EngineCommands.CLOSE_ENGINE, Collections.emptyList()));
+		super.finalize();
 	}
 
 }

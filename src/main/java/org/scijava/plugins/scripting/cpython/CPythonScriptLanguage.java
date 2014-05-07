@@ -80,4 +80,13 @@ public class CPythonScriptLanguage extends AbstractScriptLanguage {
 		return "cpython";
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#finalize()
+	 */
+	@Override
+	protected void finalize() throws Throwable {
+		CPythonScriptEngine.closeService();
+		super.finalize();
+	}
+
 }
