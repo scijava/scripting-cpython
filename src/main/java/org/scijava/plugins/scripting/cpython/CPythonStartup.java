@@ -36,5 +36,10 @@ public class CPythonStartup {
 		NarSystem.loadLibrary();
 	}
 
-	public native static void initializePythonThread();
+	/**
+	 * Spins up the Python thread.
+	 * 
+	 * @param pythonCode the Python code to execute
+	 */
+	public native static void initializePythonThread(final String pythonCode);
 }

@@ -32,10 +32,15 @@
 #include "org_scijava_plugins_scripting_cpython_CPythonStartup.h"
 #include <python.h>
 
-JNIEXPORT void JNICALL Java_org_scijava_plugins_scripting_cpython_CPythonStartup_initializePythonThread(JNIEnv *env, jclass clazz)
+JNIEXPORT void JNICALL Java_org_scijava_plugins_scripting_cpython_CPythonStartup_initializePythonThread(JNIEnv *env, jclass clazz, jstring pythonCode)
 {
+	const char *python_code;
+
 	Py_Initialize();
-	PyRun_SimpleString("print 'Hello, world!'");
+	python_code = (*env)->GetStringUTFChars(env, pythonCode, NULL);
+	PyRun_SimpleString(python_code);
+        (*env)->ReleaseStringUTFChars(env, pythonCode, python_code);
+
 	/*
 	 * We cannot really call Py_Finalize(); here: multiple SciJava contexts
 	 * can have their individual CPythonScriptLanguage instances, so we

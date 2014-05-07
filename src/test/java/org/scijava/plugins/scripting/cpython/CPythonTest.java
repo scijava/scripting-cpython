@@ -36,6 +36,6 @@ public class CPythonTest {
 
 	@Test
 	public void initializeTest() {
-		CPythonStartup.initializePythonThread();
+		CPythonStartup.initializePythonThread("print 'Hello, Lee!'");
 	}
 }
