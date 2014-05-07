@@ -1,0 +1,150 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.scijava</groupId>
+                <artifactId>pom-scijava</artifactId>
+                <version>1.167</version>
+                <relativePath />
+	</parent>
+
+	<artifactId>scripting-cpython</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>nar</packaging>
+
+	<name>SciJava Scripting: CPython</name>
+	<description>JSR-223-compliant Python scripting language plugin linking to CPython</description>
+	<url>http://scijava.org/</url>
+	<inceptionYear>2014</inceptionYear>
+
+	<properties>
+		<python.version>2.6</python.version>
+	</properties>
+
+	<licenses>
+		<license>
+			<name>Simplified BSD License</name>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>LeeKamentsky</id>
+			<name>Lee Kamentsky</name>
+			<email>leek@broadinstitute.org</email>
+			<url>http://www.broadinstitute.org/~leek/</url>
+			<organization>Broad Institute of MIT and Harvard</organization>
+			<organizationUrl>http://www.broadinstitute.org/</organizationUrl>
+			<roles>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>-5</timezone>
+		</developer>
+		<developer>
+			<id>dscho</id>
+			<name>Johannes Schindelin</name>
+			<email>schindelin@wisc.edu</email>
+			<url>http://loci.wisc.edu/people/johannes-schindelin</url>
+			<organization>UW-Madison LOCI</organization>
+			<organizationUrl>http://loci.wisc.edu/</organizationUrl>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<timezone>-6</timezone>
+		</developer>
+	</developers>
+
+	<mailingLists>
+		<mailingList>
+			<name>SciJava</name>
+			<subscribe>https://groups.google.com/group/scijava</subscribe>
+			<unsubscribe>https://groups.google.com/group/scijava</unsubscribe>
+			<post>scijava@googlegroups.com</post>
+			<archive>https://groups.google.com/group/scijava</archive>
+		</mailingList>
+	</mailingLists>
+
+	<scm>
+		<connection>scm:git:git://github.com/scijava/scripting-cpython</connection>
+		<developerConnection>scm:git:git@github.com:scijava/scripting-cpython</developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/scijava/scripting-cpython</url>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub Issues</system>
+		<url>https://github.com/scijava/scripting-cpython/issues</url>
+	</issueManagement>
+
+	<ciManagement>
+		<system>Jenkins</system>
+		<url>https://jenkins.imagej.net/job/scripting-BeanShell/</url>
+	</ciManagement>
+
+	<dependencies>
+		<!-- SciJava dependencies -->
+		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>scijava-common</artifactId>
+		</dependency>
+
+		<!-- Test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<packageName>org.scijava.plugins.scripting.cpython</packageName>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<licenseName>bsd_2</licenseName>
+					<organizationName>Board of Regents of the University of
+Wisconsin-Madison, Broad Institute of MIT and Harvard, and Max Planck
+Institute of Molecular Cell Biology and Genetics.</organizationName>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.maven-nar</groupId>
+				<artifactId>nar-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<c>
+						<options>
+                                                        <option>-I/usr/include/python${python.version}</option>
+						</options>
+					</c>
+					<linker>
+						<options>
+                                                        <option>-lpython${python.version}</option>
+						</options>
+					</linker>
+					<libraries>
+						<library>
+							<type>executable</type>
+							<run>true</run>
+						</library>
+					</libraries>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
