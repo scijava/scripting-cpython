@@ -41,7 +41,7 @@ import java.util.concurrent.SynchronousQueue;
 
 import javax.script.ScriptException;
 
-import imagej.script.AbstractScriptEngine;
+import org.scijava.script.AbstractScriptEngine;
 
 
 /**

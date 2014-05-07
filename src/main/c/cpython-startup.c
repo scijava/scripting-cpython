@@ -1,8 +1,8 @@
 /*
  * #%L
- * SciJava Common shared library for SciJava software.
+ * JSR-223-compliant Python scripting language plugin linking to CPython
  * %%
- * Copyright (C) 2009 - 2014 Board of Regents of the University of
+ * Copyright (C) 2014 Board of Regents of the University of
  * Wisconsin-Madison, Broad Institute of MIT and Harvard, and Max Planck
  * Institute of Molecular Cell Biology and Genetics.
  * %%
@@ -29,63 +29,25 @@
  * #L%
  */
 
-package org.scijava.plugins.scripting.cpython;
+#include "org_scijava_plugins_scripting_cpython_CPythonStartup.h"
+#include <python.h>
 
-import javax.script.ScriptEngine;
+JNIEXPORT void JNICALL Java_org_scijava_plugins_scripting_cpython_CPythonStartup_initializePythonThread(JNIEnv *env, jclass clazz, jstring pythonCode)
+{
+	PyGILState_STATE state;
+	const char *python_code;
 
-import org.scijava.log.LogService;
-import org.scijava.plugin.Parameter;
-import org.scijava.plugin.Plugin;
-import org.scijava.script.AbstractScriptLanguage;
-import org.scijava.script.ScriptLanguage;
+	Py_Initialize();
+	state = PyGILState_Ensure();
+	python_code = (*env)->GetStringUTFChars(env, pythonCode, NULL);
+	PyRun_SimpleString(python_code);
+        (*env)->ReleaseStringUTFChars(env, pythonCode, python_code);
+	PyGILState_Release(state);
 
-/**
- * @author Lee Kamentsky
- *
- * A script language plugin for CPython and the Javabridge
- * 
- */
-@Plugin(type = ScriptLanguage.class)
-public class CPythonScriptLanguage extends AbstractScriptLanguage {
-	@Parameter
-	LogService logService;
-	
-	@Override
-	public ScriptEngine getScriptEngine() {
-		try {
-			CPythonScriptEngine engine =  new CPythonScriptEngine();
-			getContext().inject(engine);
-			return engine;
-			
-		} catch (InterruptedException e) {
-			logService.warn(e);
-			return null;
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see imagej.script.AbstractScriptLanguage#getEngineName()
+	/*
+	 * We cannot really call Py_Finalize(); here: multiple SciJava contexts
+	 * can have their individual CPythonScriptLanguage instances, so we
+	 * cannot call it after tearing down the context, either, so we have to
+	 * introduce a reference counter in the C library (TODO).
 	 */
-	@Override
-	public String getEngineName() {
-		return "cpython";
-	}
-
-	/* (non-Javadoc)
-	 * @see imagej.script.AbstractScriptLanguage#getLanguageName()
-	 */
-	@Override
-	public String getLanguageName() {
-		return "cpython";
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#finalize()
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		CPythonScriptEngine.closeService();
-		super.finalize();
-	}
-
 }

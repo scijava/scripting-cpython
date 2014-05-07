@@ -1,8 +1,8 @@
 /*
  * #%L
- * SciJava Common shared library for SciJava software.
+ * JSR-223-compliant Python scripting language plugin linking to CPython
  * %%
- * Copyright (C) 2009 - 2014 Board of Regents of the University of
+ * Copyright (C) 2014 Board of Regents of the University of
  * Wisconsin-Madison, Broad Institute of MIT and Harvard, and Max Planck
  * Institute of Molecular Cell Biology and Genetics.
  * %%
@@ -28,64 +28,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-
 package org.scijava.plugins.scripting.cpython;
 
-import javax.script.ScriptEngine;
+import org.junit.Test;
 
-import org.scijava.log.LogService;
-import org.scijava.plugin.Parameter;
-import org.scijava.plugin.Plugin;
-import org.scijava.script.AbstractScriptLanguage;
-import org.scijava.script.ScriptLanguage;
+public class CPythonTest {
 
-/**
- * @author Lee Kamentsky
- *
- * A script language plugin for CPython and the Javabridge
- * 
- */
-@Plugin(type = ScriptLanguage.class)
-public class CPythonScriptLanguage extends AbstractScriptLanguage {
-	@Parameter
-	LogService logService;
-	
-	@Override
-	public ScriptEngine getScriptEngine() {
-		try {
-			CPythonScriptEngine engine =  new CPythonScriptEngine();
-			getContext().inject(engine);
-			return engine;
-			
-		} catch (InterruptedException e) {
-			logService.warn(e);
-			return null;
-		}
+	@Test
+	public void initializeTest() {
+		CPythonStartup.initializePythonThread("print 'Hello, Lee!'");
 	}
-
-	/* (non-Javadoc)
-	 * @see imagej.script.AbstractScriptLanguage#getEngineName()
-	 */
-	@Override
-	public String getEngineName() {
-		return "cpython";
-	}
-
-	/* (non-Javadoc)
-	 * @see imagej.script.AbstractScriptLanguage#getLanguageName()
-	 */
-	@Override
-	public String getLanguageName() {
-		return "cpython";
-	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#finalize()
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		CPythonScriptEngine.closeService();
-		super.finalize();
-	}
-
 }
