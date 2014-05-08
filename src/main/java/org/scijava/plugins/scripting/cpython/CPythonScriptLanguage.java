@@ -31,6 +31,11 @@
 
 package org.scijava.plugins.scripting.cpython;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 import javax.script.ScriptEngine;
 
 import org.scijava.log.LogService;
@@ -47,11 +52,36 @@ import org.scijava.script.ScriptLanguage;
  */
 @Plugin(type = ScriptLanguage.class)
 public class CPythonScriptLanguage extends AbstractScriptLanguage {
+	private static final String PYTHON_SCRIPT = "scripting-cpython.py";
 	@Parameter
 	LogService logService;
 	
+	boolean initialized=false;
+	
 	@Override
 	public ScriptEngine getScriptEngine() {
+		synchronized(this) {
+			if (! initialized) {
+				final InputStream is = this.getClass().getClassLoader().getResourceAsStream(PYTHON_SCRIPT);
+				final Reader rdr = new InputStreamReader(is);
+				final StringBuffer sbScript = new StringBuffer();
+				final char [] buffer = new char[65536];
+				while (true) {
+					try {
+						final int nBytes = rdr.read(buffer);
+						if (nBytes <= 0) break;
+						sbScript.append(buffer, 0, nBytes);
+					} catch (IOException e) {
+						logService.warn(String.format(
+								"Unexpected read failure in CPython script language for %s resource: %s",
+								PYTHON_SCRIPT, e.getMessage()));
+						return null;
+					}
+				}
+				CPythonStartup.initializePythonThread(sbScript.toString());
+				initialized=true;
+			}
+		}
 		try {
 			CPythonScriptEngine engine =  new CPythonScriptEngine();
 			getContext().inject(engine);
@@ -76,7 +106,7 @@ public class CPythonScriptLanguage extends AbstractScriptLanguage {
 	 */
 	@Override
 	public String getLanguageName() {
-		return "cpython";
+		return "CPython";
 	}
 
 	/* (non-Javadoc)

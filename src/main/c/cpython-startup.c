@@ -36,13 +36,22 @@ JNIEXPORT void JNICALL Java_org_scijava_plugins_scripting_cpython_CPythonStartup
 {
 	PyGILState_STATE state;
 	const char *python_code;
+	PyObject *err;
 
 	Py_Initialize();
 	state = PyGILState_Ensure();
 	python_code = (*env)->GetStringUTFChars(env, pythonCode, NULL);
 	PyRun_SimpleString(python_code);
         (*env)->ReleaseStringUTFChars(env, pythonCode, python_code);
+	err = PyErr_Occurred();
+	if (err) {
+		PyErr_Print();
+		PyErr_Clear();
+	}
 	PyGILState_Release(state);
+	if (err) {
+		(*env)->ThrowNew(env, (*env)->FindClass(env, "java/lang/RuntimeException"), "Python script raised an exception");
+	}
 
 	/*
 	 * We cannot really call Py_Finalize(); here: multiple SciJava contexts

@@ -1,6 +1,7 @@
 /*
  * #%L
- * SciJava Common shared library for SciJava software.
+ * Scripting-CPython JSR 233-compliant script binding to CPython
+ * via the javabridge.
  * %%
  * Copyright (C) 2009 - 2014 Board of Regents of the University of
  * Wisconsin-Madison, Broad Institute of MIT and Harvard, and Max Planck
@@ -39,7 +40,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.SynchronousQueue;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
 import javax.script.ScriptException;
+import javax.script.SimpleBindings;
 
 import org.scijava.script.AbstractScriptEngine;
 
@@ -123,11 +127,19 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 			this.command = command;
 			this.payload = payload;
 		}
+		/* (non-Javadoc)
+		 * @see java.lang.Object#toString()
+		 */
+		@Override
+		public String toString() {
+			return String.format("Command=%s, payload=%s", command, payload.toString() );
+		}
 	}
 	
 	public CPythonScriptEngine() throws InterruptedException {
 		engineRequestQueue.put(new Message(EngineCommands.NEW_ENGINE, Arrays.asList((Object)requestQueue, (Object)responseQueue)));
 		engineResponseQueue.take();
+		engineScopeBindings = new SimpleBindings();
 	}
 	/**
 	 * Tell the Python side that the service is finished
@@ -138,9 +150,8 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 	}
 	@Override
 	public Object eval(String script) throws ScriptException {
-		Map<String, Object> context = new HashMap<String, Object>();
 		// TODO: Populate context with current input bindings
-		final Message request = new Message(EngineCommands.EVALUATE, Arrays.asList((Object)script, (Object)context));
+		final Message request = new Message(EngineCommands.EVALUATE, Arrays.asList((Object)script, (Object)engineScopeBindings));
 		return eval(request);
 	}
 	/**
@@ -157,6 +168,8 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 					Object oMessage = result.payload.get(0);
 					if (oMessage instanceof String) {
 						throw new ScriptException((String)oMessage);
+					} else if (oMessage instanceof Exception) {
+						throw new ScriptException((Exception)oMessage);
 					}
 				}
 				throw new ScriptException("Exception thrown but unknown format");
@@ -175,7 +188,7 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 		while (true) {
 			try {
 				int nChars = reader.read(cbuf);
-				if (nChars == 0) break;
+				if (nChars <= 0) break;
 				buf.append(cbuf, 0, nChars);
 			} catch (IOException e) {
 				throw new ScriptException(e);
@@ -192,5 +205,4 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 		requestQueue.put(new Message(EngineCommands.CLOSE_ENGINE, Collections.emptyList()));
 		super.finalize();
 	}
-
 }
