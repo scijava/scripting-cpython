@@ -18,7 +18,9 @@
 	<inceptionYear>2014</inceptionYear>
 
 	<properties>
-		<python.version>27</python.version>
+		<python.version>2.6</python.version>
+		<python.include.option>-I/usr/include/python${python.version}</python.include.option>
+		<python.link.option>-lpython${python.version}</python.link.option>
 		<!-- surefire does not know about NAR... -->
 		<skipTests>true</skipTests>
 	</properties>
@@ -131,12 +133,12 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 				<configuration>
 					<c>
 						<options>
-                                                        <option>-Ic:/python${python.version}/include</option>
+							<option>${python.include.option}</option>
 						</options>
 					</c>
 					<linker>
 						<options>
-                                                        <option>c:/python${python.version}/libs/python${python.version}.lib</option>
+							<option>${python.link.option}</option>
 						</options>
 					</linker>
 					<libraries>
@@ -149,5 +151,21 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>windows-python-2.7</id>
+			<activation>
+				<file>
+					<exists>c:/python27</exists>
+				</file>
+			</activation>
+			<properties>
+				<python.version>27</python.version>
+				<python.include.option>-Ic:/python${python.version}/include</python.include.option>
+				<python.link.option>c:/python${python.version}/libs/python${python.version}.lib</python.link.option>
+			</properties>
+		</profile>
+	</profiles>
 
 </project>
