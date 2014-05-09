@@ -10,6 +10,7 @@ accompanying file LICENSE for details.
 
 '''
 
+import ast
 import javabridge as J
 import threading
 import logging
@@ -136,7 +137,29 @@ def do_evaluate(payload):
         command = J.to_string(payload[0])
         context = context_to_locals(payload[1])
         logger.debug("Script:\n%s" % command)
-        result = eval(command, __builtins__.__dict__, context)
+        #
+        # OK, the game plan is a little difficult here:
+        #
+        # use AST to parse (see https://docs.python.org/2.7/library/ast.html)
+        # The AST object's body is a list of statements.
+        # If the last body element is an ast.Expr, then
+        # we execute all of the statements except the last
+        # and then we wrap the last as an ast.Expression
+        # and evaluate it.
+        #
+        a = ast.parse(command)
+        if isinstance(a.body[-1], ast.Expr):
+            expr = a.body[-1]
+            del a.body[-1]
+        else:
+            expr = a.parse("None").body[0]
+        
+        filename = context.get("javax.scripting.filename", 
+                               "scripting-cpython") 
+        code = compile(a, filename, mode="exec")
+        exec(code, __builtins__.__dict__, context)
+        code = compile(ast.Expression(expr.value), filename, mode="eval")
+        result = eval(code, __builtins__.__dict__, context)
         logger.debug("Script evaluated")
         return J.run_script(
             """importPackage(Packages.org.scijava.plugins.scripting.cpython);
