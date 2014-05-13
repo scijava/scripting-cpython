@@ -8,9 +8,10 @@
 #
 import javabridge as J
 import numpy as np
+importClass("net.imagej.display.ImageDisplay")
+importClass("net.imglib2.util.ImgUtil")
 
-idc = J.class_for_name("net.imagej.display.ImageDisplay")
-display = d.getActiveDisplay(idc)
+display = d.getActiveDisplay(ImageDisplay.klass)
 data = display.getActiveView().getData()
 imgplus = data.getImgPlus()
 ndims = imgplus.numDimensions()
@@ -23,9 +24,7 @@ strides = np.ones(len(dims), int)
 for i in range(0, len(dims)-1):
     strides[-i-2] = strides[-i-1] * dims[-i-1]
 
-J.static_call("net/imglib2/util/ImgUtil", "copy", 
-              "(Lnet/imglib2/img/Img;[DI[I)V",
-              imgplus.o, ja, 0, strides)
+ImgUtil.copy(imgplus, ja, 0, strides)
 a = J.get_env().get_double_array_elements(ja)
 a.shape = dims
 #
@@ -37,8 +36,6 @@ jd = np.sin(2*np.pi * j * frequency / dims[1]) * magnitude
 ii = np.maximum(0, np.minimum(dims[0]-1, i+id)).astype(int)
 jj = np.maximum(0, np.minimum(dims[1]-1, j+jd)).astype(int)
 b = a[ii, jj]
-J.static_call("net/imglib2/util/ImgUtil", "copy",
-              "([DI[ILnet/imglib2/img/Img;)V",
-              b.flatten(), 0, strides, imgplus.o)
+ImgUtil.copy(b.flatten(), 0, strides, imgplus)
 display.update()
 

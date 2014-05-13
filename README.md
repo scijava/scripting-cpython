@@ -68,10 +68,21 @@ will launch ImageJ with CPython scripting support:
 ## The scripting language
 
 Inputs to your script are either translated to Python native types or,
-if they are Java types, they are wrapped using reflection. Currently, 
-object construction, calling static methods and setting and getting
-static and instance fields must be done using the javabridge package. If
-you want to wrap an object retrieved from the javabridge, you can use
+if they are Java types, they are wrapped using reflection. You can import
+classes into your local scope using `importClass`. Here is an example:
+
+    importClass("java.lang.Integer")
+    Integer.toString(Integer.MAX_VALUE) # returns 2^31 - 1
+    
+and another:
+
+    importClass("java.util.ArrayList")
+    a = ArrayList()
+    a.add("Hello")
+    a.add("World")
+    str(a) # returns [ Hello, World ]
+
+If you want to wrap an object retrieved from the javabridge, you can use
 JWrapper:
 
      import javabridge
