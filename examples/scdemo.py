@@ -1,5 +1,6 @@
 # @DisplayService d
-# @double exponent
+# @double frequency(min="1")
+# @double magnitude(min="1")
 #
 # Demo of manipulating an image using Numpy
 # Only works on B/W images (but the arrays that
@@ -9,12 +10,12 @@ import javabridge as J
 import numpy as np
 
 idc = J.class_for_name("net.imagej.display.ImageDisplay")
-display = J.run_script("d.getActiveDisplay(idc)", dict(d=d, idc=idc))
-data = J.run_script("display.getActiveView().getData()", dict(display=display))
-imgplus = J.run_script("data.getImgPlus()", dict(data=data))
-ndims = J.run_script("imgplus.numDimensions()", dict(imgplus=imgplus))
-start = [J.run_script("java.lang.Long(imgplus.min(i)).intValue();", dict(imgplus=imgplus, i=i)) for i in range(ndims)]
-end = [J.run_script("java.lang.Long(imgplus.max(i)).intValue();", dict(imgplus=imgplus, i=i))+1 for i in range(ndims)]
+display = d.getActiveDisplay(idc)
+data = display.getActiveView().getData()
+imgplus = data.getImgPlus()
+ndims = imgplus.numDimensions()
+start = [imgplus.min(i) for i in range(ndims)]
+end = [imgplus.max(i)+1 for i in range(ndims)]
 dims = np.array(end) - np.array(start)
 a = np.zeros(np.prod(dims), np.float64)
 ja = J.get_env().make_double_array(np.ascontiguousarray(a))
@@ -24,21 +25,20 @@ for i in range(0, len(dims)-1):
 
 J.static_call("net/imglib2/util/ImgUtil", "copy", 
               "(Lnet/imglib2/img/Img;[DI[I)V",
-              imgplus, ja, 0, strides)
+              imgplus.o, ja, 0, strides)
 a = J.get_env().get_double_array_elements(ja)
 a.shape = dims
 #
 # OK now apply a little amateurish warping.
 #
-e = J.call(exponent, "doubleValue", "()D")
 i, j = np.mgrid[0:dims[0], 0:dims[1]].astype(float)
-ii = np.minimum(dims[0]-1, dims[0] * (i ** e) / (dims[0] ** e)).astype(int)
-jj = np.minimum(dims[1]-1, dims[1] * (j ** e) / (dims[1] ** e)).astype(int)
+id = np.sin(2*np.pi * i * frequency / dims[0]) * magnitude
+jd = np.sin(2*np.pi * j * frequency / dims[1]) * magnitude
+ii = np.maximum(0, np.minimum(dims[0]-1, i+id)).astype(int)
+jj = np.maximum(0, np.minimum(dims[1]-1, j+jd)).astype(int)
 b = a[ii, jj]
 J.static_call("net/imglib2/util/ImgUtil", "copy",
               "([DI[ILnet/imglib2/img/Img;)V",
-              b.flatten(), 0, strides, imgplus)
-J.call(display, "update", "()V")
-
-
+              b.flatten(), 0, strides, imgplus.o)
+display.update()
 

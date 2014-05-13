@@ -64,3 +64,18 @@ will launch ImageJ with CPython scripting support:
     
   You should be able to start a script editor from `File->New->Script...` and
   then choose `CPython` from the language menu and you should be good to go.
+  
+## The scripting language
+
+Inputs to your script are either translated to Python native types or,
+if they are Java types, they are wrapped using reflection. Currently, 
+object construction, calling static methods and setting and getting
+static and instance fields must be done using the javabridge package. If
+you want to wrap an object retrieved from the javabridge, you can use
+JWrapper:
+
+     import javabridge
+     a = JWrapper(javabridge.make_instance("java/util/ArrayList", "()V"))
+     a.add("Hello")
+     a.add("World")
+     str(a.size()) # returns 2
