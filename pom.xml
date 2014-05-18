@@ -166,6 +166,36 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 				<python.link.option>c:/python${python.version}/libs/python${python.version}.lib</python.link.option>
 			</properties>
 		</profile>
+                <profile>
+                        <id>only-eclipse</id>
+                        <activation>
+                                <property>
+                                        <name>m2e.version</name>
+                                </property>
+                        </activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>build-helper-maven-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>add-source</goal>
+								</goals>
+								<configuration>
+									<sources>
+										<source>${project.build.directory}/nar/nar-generated/</source>
+									</sources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 
 </project>
