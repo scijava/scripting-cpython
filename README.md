@@ -1,4 +1,4 @@
-# BeanShell Scripting
+# (Native) Python Scripting
 
 This library provides a
 [JSR-223-compliant](https://en.wikipedia.org/wiki/Scripting_for_the_Java_Platform)
