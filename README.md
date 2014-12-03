@@ -47,8 +47,8 @@ will launch ImageJ with CPython scripting support:
     import os
     import javabridge
     path_imagej = "/foo/ImageJ.app/jars"
-    jars = [os.path.join(path_imagej, x) 
-            for x in os.listdir(path_imagej): 
+    jars = [os.path.join(path_imagej, x)
+            for x in os.listdir(path_imagej):
             if x.endswith(".jar")]
     lib_path = os.environ["PATH"]+";/bar/lib"
     library_path_arg = "-Djava.library.path=%s" % lib_path
@@ -62,10 +62,10 @@ will launch ImageJ with CPython scripting support:
              Packages.net.imagej.Main.launch(args);
          } };""", dict(args=jargs))
     javabridge.execute_runnable_in_main_thread(runnable)
-    
+
   You should be able to start a script editor from `File->New->Script...` and
   then choose `CPython` from the language menu and you should be good to go.
-  
+
 ## The scripting language
 
 Inputs to your script are either translated to Python native types or,
@@ -74,7 +74,7 @@ classes into your local scope using `importClass`. Here is an example:
 
     importClass("java.lang.Integer")
     Integer.toString(Integer.MAX_VALUE) # returns 2^31 - 1
-    
+
 and another:
 
     importClass("java.util.ArrayList")
