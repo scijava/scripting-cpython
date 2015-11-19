@@ -4,9 +4,9 @@
 
 	<parent>
 		<groupId>org.scijava</groupId>
-                <artifactId>pom-scijava</artifactId>
-                <version>5.2.2</version>
-                <relativePath />
+		<artifactId>pom-scijava</artifactId>
+		<version>5.2.2</version>
+		<relativePath />
 	</parent>
 
 	<artifactId>scripting-cpython</artifactId>
