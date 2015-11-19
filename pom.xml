@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -16,15 +17,6 @@
 	<description>JSR-223-compliant Python scripting language plugin linking to CPython</description>
 	<url>http://scijava.org/</url>
 	<inceptionYear>2014</inceptionYear>
-
-	<properties>
-		<python.version>2.6</python.version>
-		<python.include.option>-I/usr/include/python${python.version}</python.include.option>
-		<python.link.option>-lpython${python.version}</python.link.option>
-		<!-- surefire does not know about NAR... -->
-		<skipTests>true</skipTests>
-	</properties>
-
 	<licenses>
 		<license>
 			<name>Simplified BSD License</name>
@@ -76,16 +68,22 @@
 		<tag>HEAD</tag>
 		<url>https://github.com/scijava/scripting-cpython</url>
 	</scm>
-
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/scijava/scripting-cpython/issues</url>
 	</issueManagement>
-
 	<ciManagement>
 		<system>Jenkins</system>
 		<url>https://jenkins.imagej.net/job/scripting-BeanShell/</url>
 	</ciManagement>
+
+	<properties>
+		<python.version>2.6</python.version>
+		<python.include.option>-I/usr/include/python${python.version}</python.include.option>
+		<python.link.option>-lpython${python.version}</python.link.option>
+		<!-- surefire does not know about NAR... -->
+		<skipTests>true</skipTests>
+	</properties>
 
 	<dependencies>
 		<!-- SciJava dependencies -->
@@ -167,5 +165,4 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 			</properties>
 		</profile>
 	</profiles>
-
 </project>
