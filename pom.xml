@@ -26,20 +26,6 @@
 
 	<developers>
 		<developer>
-			<id>LeeKamentsky</id>
-			<name>Lee Kamentsky</name>
-			<url>http://imagej.net/User:Leek</url>
-			<roles>
-				<role>founder</role>
-				<role>lead</role>
-				<role>developer</role>
-				<role>debugger</role>
-				<role>reviewer</role>
-				<role>support</role>
-				<role>maintainer</role>
-			</roles>
-		</developer>
-		<developer>
 			<id>ctrueden</id>
 			<name>Curtis Rueden</name>
 			<url>http://imagej.net/User:Rueden</url>
@@ -57,6 +43,12 @@
 		</developer>
 	</developers>
 	<contributors>
+		<contributor>
+			<name>Lee Kamentsky</name>
+			<url>http://imagej.net/User:Leek</url>
+			<roles><role>founder</role></roles>
+			<properties><id>LeeKamentsky</id></properties>
+		</contributor>
 		<contributor>
 			<name>Johannes Schindelin</name>
 			<url>http://imagej.net/User:Schindelin</url>
