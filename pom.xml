@@ -60,8 +60,8 @@
 		<url>https://github.com/scijava/scripting-cpython/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<system>Jenkins</system>
-		<url>https://jenkins.imagej.net/job/scripting-BeanShell/</url>
+		<system>Travis CI</system>
+		<url>https://travis-ci.org/scijava/scripting-cpython</url>
 	</ciManagement>
 
 	<properties>
