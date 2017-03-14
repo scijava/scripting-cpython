@@ -15,7 +15,7 @@
 
 	<name>SciJava Scripting: CPython</name>
 	<description>JSR-223-compliant Python scripting language plugin linking to CPython</description>
-	<url>http://scijava.org/</url>
+	<url>https://github.com/scijava/scripting-cpython</url>
 	<inceptionYear>2014</inceptionYear>
 	<licenses>
 		<license>
