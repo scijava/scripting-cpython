@@ -83,7 +83,7 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 		 * a Java object representing the result.
 		 * 
 		 * The payload's first argument is a string to be executed.
-		 * The payload's second argument is a Map<String, Object> that's
+		 * The payload's second argument is a {@code Map<String, Object>} that's
 		 * used to populate the local context of the script evaluation.
 		 */
 		EVALUATE,
@@ -91,7 +91,7 @@ public class CPythonScriptEngine extends AbstractScriptEngine {
 		 * Sent via the engineResponseQueue: the result of an NEW_ENGINE request
 		 *
 		 * The payload's first argument is a string to be executed.
-		 * The payload's second argument is a Map<String, Object> that's
+		 * The payload's second argument is a {@code Map<String, Object>} that's
 		 * used to populate the local context of the script evaluation.
 		 */
 		NEW_ENGINE_RESULT,
