@@ -1,11 +1,11 @@
 language: java
 jdk: oraclejdk8
 branches:
-  only: master
+  only:
+  - master
+  - "/.*-[0-9]+\\..*/"
 install: true
 script: ".travis/build.sh"
-after_success: ".travis/notify.sh Travis-Success"
-after_failure: ".travis/notify.sh Travis-Failure"
 env:
   global:
   - secure: gAQvFCQxRjDT/xCivdxLEADu3DcXoX8QGEYdRktKsSRyEcUW+T6J1kEHtNSdFxhxENazXXyAVk+sadwAvy3NRI5PDYsDLfW0giLnsrTLWYO+f9z8jCVgMfj3RPk8bxyJW8j1sbnGmGo0EzjddBkyIx3KQl3utj7WpkchltNKdTo=
