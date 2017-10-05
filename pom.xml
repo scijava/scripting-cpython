@@ -70,6 +70,9 @@
 		<python.link.option>-lpython${python.version}</python.link.option>
 		<!-- surefire does not know about NAR... -->
 		<skipTests>true</skipTests>
+
+		<!-- NB: Deploy releases to the ImageJ Maven repository. -->
+		<releaseProfiles>deploy-to-imagej</releaseProfiles>
 	</properties>
 
 	<dependencies>
